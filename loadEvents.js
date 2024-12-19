@@ -22,10 +22,12 @@ const SERVICE_ACCOUNT_FILE = './service.json'; // Path to your service account J
         console.log('Connected to the RDS database.');
 
         const query = `
-            SELECT sku, eventId, eventTypeId, eventPrice, eventStartDate, eventEndDate, 
+            SELECT cast(sku as int) as sku, eventId, eventTypeId, eventPrice, eventStartDate, eventEndDate, 
                    modifyDate, createDate, active
             FROM web.tblProductEvents
-            WHERE active = 1;
+            WHERE active = 1
+            order by cast(sku as int),
+                     eventId;
         `;
         const [rows] = await connection.execute(query);
         console.log(`Number of rows selected: ${rows.length}`);
